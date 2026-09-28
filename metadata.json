@@ -1,0 +1,6 @@
+{
+  "name": "Government Career Navigator",
+  "description": "Personalized discovery, eligibility evaluation, and preparation platform for Indian government jobs and competitive examinations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
