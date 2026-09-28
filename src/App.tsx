@@ -3,13 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo, useEffect } from 'react';
-import { UserProfile, ExamOpportunity, TrackedExam, ExamSector } from './types';
+import React, { useState, useMemo } from 'react';
+import { UserProfile, ExamOpportunity, TrackedExam } from './types';
 import { EXAMS_DATA } from './data/examsData';
 import { evaluateEligibility } from './utils/eligibilityEngine';
 import { 
   getStoredProfile, saveProfile, getTrackedExams, saveTrackedExam, 
-  removeTrackedExam, switchAccount 
+  removeTrackedExam 
 } from './utils/storage';
 import { SupportedLanguage, getTranslation } from './utils/translations';
 import { Navbar } from './components/Navbar';
@@ -23,12 +23,14 @@ import { EligibilitySimulator } from './components/EligibilitySimulator';
 import { TrackedExamsView } from './components/TrackedExamsView';
 import { PreparationCompass } from './components/PreparationCompass';
 import { JargonBuster } from './components/JargonBuster';
+import { N8nChatWidget } from './components/N8nChatWidget';
 import { 
   Search, Filter, CheckCircle2, AlertTriangle, 
   Sparkles, Calendar, BookOpen, ShieldCheck, ArrowRight, RefreshCw, X 
 } from 'lucide-react';
 
 const LANGUAGE_KEY = 'gcn_preferred_language';
+const N8N_CHAT_WEBHOOK_URL = "https://kallakavya1128.app.n8n.cloud/webhook/e00c9c15-2836-4dc3-be31-4158177317aa/chat";
 
 export default function App() {
   const [currentLang, setCurrentLang] = useState<SupportedLanguage>(() => {
@@ -224,7 +226,7 @@ export default function App() {
         {/* TAB 1: OPPORTUNITIES DECK */}
         {activeTab === 'opportunities' && (
           <div id="opportunities-deck" className="space-y-5">
-            {/* Clean, Non-clumsy Filter and Search Bar */}
+            {/* Clean Filter and Search Bar */}
             <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs space-y-3">
               <div className="flex flex-col md:flex-row gap-2.5">
                 {/* Search Bar */}
@@ -316,7 +318,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Opportunities Grid with Clean Architecture */}
+            {/* Opportunities Grid */}
             {filteredExams.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
                 {filteredExams.map(exam => (
@@ -396,7 +398,7 @@ export default function App() {
         )}
       </main>
 
-      {/* Footer with clean, uncluttered layout */}
+      {/* Footer */}
       <footer className="border-t border-slate-200 bg-white mt-12 py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
@@ -459,6 +461,12 @@ export default function App() {
         onClose={() => setSelectedExam(null)}
         onUpdateTracked={handleUpdateTracked}
         onRemoveTracked={handleRemoveTracked}
+      />
+
+      {/* n8n Live AI Chatbot Widget */}
+      <N8nChatWidget
+        webhookUrl={N8N_CHAT_WEBHOOK_URL}
+        userName={userProfile.privacyMode ? undefined : userProfile.personal.fullName.split(' ')[0]}
       />
     </div>
   );

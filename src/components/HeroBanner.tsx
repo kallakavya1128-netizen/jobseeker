@@ -1,7 +1,8 @@
 import React from 'react';
 import { UserProfile } from '../types';
 import { SupportedLanguage, getTranslation } from '../utils/translations';
-import { UserCheck, ArrowRight, CheckCircle, ShieldCheck } from 'lucide-react';
+import { UserCheck, ArrowRight, CheckCircle, ShieldCheck, Bot } from 'lucide-react';
+import { openN8nChat } from './N8nChatWidget';
 import heroImage from '../assets/images/hero_student_aspirants_1790580430477.jpg';
 
 interface HeroBannerProps {
@@ -130,6 +131,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             className="px-4 py-2 rounded-lg text-xs font-semibold bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors"
           >
             {t('navTracker')}
+          </button>
+
+          <button
+            onClick={() => openN8nChat()}
+            className="px-4 py-2 rounded-lg text-xs font-semibold bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 border border-indigo-500/30 transition-colors flex items-center gap-1.5"
+          >
+            <Bot className="w-3.5 h-3.5 text-indigo-400" />
+            <span>Ask Job Seeker AI</span>
           </button>
         </div>
       </div>

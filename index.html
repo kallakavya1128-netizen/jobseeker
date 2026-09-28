@@ -12,10 +12,53 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Cabinet+Grotesk:wght@700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+    <style>
+      :root {
+        --chat--color--primary: #4f46e5;
+        --chat--color--primary-shade-50: #4338ca;
+        --chat--color--primary--shade-100: #3730a3;
+        --chat--color--secondary: #059669;
+        --chat--window--z-index: 99999;
+        --chat--toggle--z-index: 99999;
+      }
+    </style>
   </head>
   <body class="bg-slate-50 text-slate-900 antialiased selection:bg-indigo-100 selection:text-indigo-900">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script type="module">
+      try {
+        const { createChat } = await import('https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js');
+        createChat({
+          webhookUrl: 'https://kallakavya1128.app.n8n.cloud/webhook/e00c9c15-2836-4dc3-be31-4158177317aa/chat',
+          webhookConfig: {
+            headers: {
+              'X-Instance-Id': 'f7832698094c5adfcaf050b2a31fd106c71a2627c2dbed1f9759a082a2c92f3e',
+            },
+          },
+          mode: 'window',
+          showWelcomeScreen: false,
+          loadPreviousSession: false,
+          enableStreaming: false,
+          initialMessages: [
+            'Hello! 👋 I am your Job Seeker AI Assistant.',
+            'Ask me anything about Indian government exams (UPSC, SSC, Banking, Railways, Defense), eligibility rules, exam patterns, or preparation guidance!'
+          ],
+          i18n: {
+            en: {
+              title: 'Job Seeker AI',
+              subtitle: 'Indian Government Exams Assistant',
+              footer: 'Powered by n8n Workflow',
+              getStarted: 'New Conversation',
+              inputPlaceholder: 'Ask an exam question...',
+            },
+          },
+        });
+      } catch (e) {
+        console.warn('n8n chat widget initialization:', e);
+      }
+    </script>
   </body>
 </html>
 
