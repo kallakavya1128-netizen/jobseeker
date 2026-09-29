@@ -1,4 +1,5 @@
 import express from 'express';
+import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -121,6 +122,7 @@ function getExamFallbackAnswer(query: string): string {
 
 async function startServer() {
   const app = express();
+  const server = http.createServer(app);
 
   // CORS middleware for iframe, preview and widget requests
   app.use((_req, res, next) => {
@@ -285,12 +287,14 @@ Formatting rules:
 
   // Setup Vite in middleware mode for dev, or serve static dist in production
   if (!isProduction) {
+    const isHmrDisabled = process.env.DISABLE_HMR === 'true';
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: {
         middlewareMode: true,
         host: '0.0.0.0',
         port: PORT,
+        hmr: isHmrDisabled ? false : { server },
       },
       appType: 'spa',
     });
@@ -302,7 +306,7 @@ Formatting rules:
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
+  server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running at http://0.0.0.0:${PORT}`);
   });
 }
