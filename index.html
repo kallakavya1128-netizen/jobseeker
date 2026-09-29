@@ -31,12 +31,7 @@
       try {
         const { createChat } = await import('https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js');
         createChat({
-          webhookUrl: 'https://kallakavya1128.app.n8n.cloud/webhook/e00c9c15-2836-4dc3-be31-4158177317aa/chat',
-          webhookConfig: {
-            headers: {
-              'X-Instance-Id': 'f7832698094c5adfcaf050b2a31fd106c71a2627c2dbed1f9759a082a2c92f3e',
-            },
-          },
+          webhookUrl: '/api/chat',
           mode: 'window',
           showWelcomeScreen: false,
           loadPreviousSession: false,
@@ -49,7 +44,7 @@
             en: {
               title: 'Job Seeker AI',
               subtitle: 'Indian Government Exams Assistant',
-              footer: 'Powered by n8n Workflow',
+              footer: 'AI-Powered Career Navigator',
               getStarted: 'New Conversation',
               inputPlaceholder: 'Ask an exam question...',
             },

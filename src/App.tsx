@@ -30,7 +30,7 @@ import {
 } from 'lucide-react';
 
 const LANGUAGE_KEY = 'gcn_preferred_language';
-const N8N_CHAT_WEBHOOK_URL = "https://kallakavya1128.app.n8n.cloud/webhook/e00c9c15-2836-4dc3-be31-4158177317aa/chat";
+const N8N_CHAT_WEBHOOK_URL = "/api/chat";
 
 export default function App() {
   const [currentLang, setCurrentLang] = useState<SupportedLanguage>(() => {
