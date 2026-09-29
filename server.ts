@@ -125,15 +125,29 @@ async function startServer() {
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true }));
 
-  // Chat API route supporting n8n widget format and standard AI chat format
-  app.post('/api/chat', async (req, res) => {
+  // Chat API route supporting GET & POST (n8n widget format, query params, and standard JSON)
+  app.all('/api/chat', async (req, res) => {
     try {
+      res.setHeader('Content-Type', 'application/json');
+
       const userMessage =
-        req.body.chatInput ||
-        req.body.message ||
-        req.body.prompt ||
-        req.body.text ||
+        req.body?.chatInput ||
+        req.query?.chatInput ||
+        req.body?.message ||
+        req.query?.message ||
+        req.body?.prompt ||
+        req.query?.prompt ||
+        req.body?.text ||
+        req.query?.text ||
+        req.query?.q ||
         '';
+
+      const sessionId =
+        req.body?.sessionId ||
+        req.query?.sessionId ||
+        req.body?.chatSessionId ||
+        req.query?.chatSessionId ||
+        'session_' + Date.now();
 
       const trimmedMessage = typeof userMessage === 'string' ? userMessage.trim() : '';
 
@@ -141,12 +155,13 @@ async function startServer() {
         return res.json({
           output: "Please enter a question about government examinations, eligibility, or syllabus!",
           text: "Please enter a question about government examinations, eligibility, or syllabus!",
-          sessionId: req.body.sessionId,
+          message: "Please enter a question about government examinations, eligibility, or syllabus!",
+          sessionId: sessionId,
         });
       }
 
       // Check if external n8n webhook is specified and user requested to attempt it
-      const webhookUrl = req.body.webhookUrl;
+      const webhookUrl = req.body?.webhookUrl || req.query?.webhookUrl;
       if (webhookUrl && typeof webhookUrl === 'string' && webhookUrl.startsWith('http')) {
         try {
           const controller = new AbortController();
@@ -156,12 +171,12 @@ async function startServer() {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              ...(req.body.headers || {}),
+              ...(req.body?.headers || {}),
             },
             body: JSON.stringify({
-              action: req.body.action || 'sendMessage',
+              action: req.body?.action || req.query?.action || 'sendMessage',
               chatInput: trimmedMessage,
-              sessionId: req.body.sessionId || 'session_' + Date.now(),
+              sessionId: sessionId,
             }),
             signal: controller.signal,
           });
@@ -175,8 +190,9 @@ async function startServer() {
               return res.json({
                 output: reply,
                 text: reply,
+                message: reply,
                 source: 'n8n',
-                sessionId: req.body.sessionId,
+                sessionId: sessionId,
               });
             }
           }
@@ -222,7 +238,7 @@ Formatting rules:
             text: replyText,
             message: replyText,
             source: 'gemini',
-            sessionId: req.body.sessionId,
+            sessionId: sessionId,
           });
         } catch (geminiError) {
           console.warn('Gemini API call failed, using intelligent exam knowledge engine:', geminiError);
@@ -236,7 +252,7 @@ Formatting rules:
         text: fallbackReply,
         message: fallbackReply,
         source: 'knowledge_engine',
-        sessionId: req.body.sessionId,
+        sessionId: sessionId,
       });
     } catch (err: any) {
       console.error('Chat endpoint error:', err);
