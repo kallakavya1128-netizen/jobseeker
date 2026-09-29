@@ -12,6 +12,7 @@ interface TrackedExamsViewProps {
   onRemoveTracked: (examId: string) => void;
   onSelectExam: (exam: ExamOpportunity) => void;
   onGoToOpportunities: () => void;
+  onGoToPrep?: () => void;
 }
 
 const STATUS_STAGES: ApplicationTrackingStatus[] = [
@@ -29,7 +30,8 @@ export const TrackedExamsView: React.FC<TrackedExamsViewProps> = ({
   onUpdateTracked,
   onRemoveTracked,
   onSelectExam,
-  onGoToOpportunities
+  onGoToOpportunities,
+  onGoToPrep
 }) => {
   if (trackedExams.length === 0) {
     return (
@@ -65,8 +67,19 @@ export const TrackedExamsView: React.FC<TrackedExamsViewProps> = ({
             Keep track of registration timelines, exam dates, application numbers, and mandatory certificates.
           </p>
         </div>
-        <div className="text-xs font-mono text-slate-600 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 self-start sm:self-auto">
-          Tracking {trackedExams.length} target examinations
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+          {onGoToPrep && (
+            <button
+              onClick={onGoToPrep}
+              className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-colors flex items-center gap-1.5 shadow-xs"
+            >
+              <Calendar className="w-3.5 h-3.5" />
+              <span>Create Daily Study Schedule</span>
+            </button>
+          )}
+          <div className="text-xs font-mono text-slate-600 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+            Tracking {trackedExams.length} target examinations
+          </div>
         </div>
       </div>
 

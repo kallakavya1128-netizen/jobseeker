@@ -367,6 +367,7 @@ export default function App() {
             onRemoveTracked={handleRemoveTracked}
             onSelectExam={e => setSelectedExam(e)}
             onGoToOpportunities={() => setActiveTab('opportunities')}
+            onGoToPrep={() => setActiveTab('prep')}
           />
         )}
 
@@ -383,7 +384,14 @@ export default function App() {
         )}
 
         {/* TAB 4: PREPARATION COMPASS */}
-        {activeTab === 'prep' && <PreparationCompass />}
+        {activeTab === 'prep' && (
+          <PreparationCompass
+            trackedExams={trackedExams}
+            onSelectExam={e => setSelectedExam(e)}
+            onGoToOpportunities={() => setActiveTab('opportunities')}
+            onToggleTrack={handleToggleTrack}
+          />
+        )}
 
         {/* TAB 5: JARGON BUSTER */}
         {activeTab === 'jargon' && <JargonBuster />}
