@@ -30,8 +30,10 @@
     <script type="module">
       try {
         const { createChat } = await import('https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js');
+        const origin = window.location.origin || '';
+        const webhookUrl = origin ? `${origin}/api/chat` : '/api/chat';
         createChat({
-          webhookUrl: '/api/chat',
+          webhookUrl: webhookUrl,
           webhookConfig: {
             method: 'POST',
             headers: {

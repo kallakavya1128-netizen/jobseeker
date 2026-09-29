@@ -79,7 +79,11 @@ export const N8nChatWidget: React.FC<N8nChatWidgetProps> = ({
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/chat', {
+      const endpoint = typeof window !== 'undefined' && window.location.origin 
+        ? `${window.location.origin}/api/chat` 
+        : '/api/chat';
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,7 +92,7 @@ export const N8nChatWidget: React.FC<N8nChatWidgetProps> = ({
           action: 'sendMessage',
           chatInput: textToSend,
           sessionId: sessionId,
-          webhookUrl: webhookUrl.startsWith('http') ? webhookUrl : undefined,
+          webhookUrl: webhookUrl.startsWith('http') && !webhookUrl.includes('/api/chat') ? webhookUrl : undefined,
         }),
       });
 
